@@ -331,6 +331,99 @@ Laugh-Odds/
 - Users can view their betting history and earnings
 - Real-time settlement status updates
 
+## ⚡ Yellow Network Integration
+
+Yellow Network powers all payments in Laugh Odds through off-chain **state channels**, eliminating gas fees entirely from the voting experience.
+
+### How It Works
+
+```
+User Wallet ──► Yellow State Channel ──► Server Clearnode ──► Winner Rewards
+     │               (Nitrolite RPC)            │
+     └── EIP-712 Auth                           └── ytest.usd transfers
+```
+
+### 1. Authentication (EIP-712)
+
+When a user connects, the client opens a WebSocket to Yellow's Clearnode (`wss://clearnet-sandbox.yellow.com/ws`) and authenticates using an EIP-712 `Policy` typed-data signature:
+
+```typescript
+// client/lib/yellowNetwork.ts
+Policy: [
+  { name: 'challenge', type: 'string' },
+  { name: 'scope', type: 'string' },
+  { name: 'wallet', type: 'address' },
+  { name: 'session_key', type: 'address' },
+  { name: 'expires_at', type: 'uint64' },
+  { name: 'allowances', type: 'Allowance[]' }
+]
+```
+
+The session key grants spending allowances (up to 1,000,000,000 ytest.usd base units) without requiring a wallet signature per vote.
+
+### 2. Voting (Off-Chain Transfer)
+
+Each vote triggers a `Transfer` RPC call over the state channel — no on-chain transaction, no gas:
+
+```typescript
+// client/lib/yellowNetwork.ts — buildVoteTransfer()
+{
+  req: [id, 'Transfer', {
+    from: userAddress,
+    to: serverAddress,
+    asset: 'ytest.usd',
+    amount: '100',           // 0.0001 ytest.usd
+    metadata: '{"marketId": 42, "vote": "funny"}',
+    nonce: n,
+  }, timestamp],
+  sig: []
+}
+```
+
+The transfer proof (`transferId`) is then sent to the Express backend to record the vote in MongoDB.
+
+### 3. Faucet Top-Up
+
+New users automatically receive test tokens via the Clearnode faucet (`/faucet/requestTokens`), so they can start voting immediately with zero setup.
+
+### 4. Reward Distribution
+
+After each 6-hour market settles, the server distributes winnings back to voters via `yellowNetworkService.distributeRewards()`:
+
+```javascript
+// server/services/yellowNetworkService.js
+for (const winner of winners) {
+  await this.sendTransfer(winner.address, winner.amount, transferId);
+}
+```
+
+- **95%** of the vote pool → winning voters (pro-rata)
+- **5%** → template creator
+
+### Key Yellow Components
+
+| Component | File | Role |
+|---|---|---|
+| `YellowNetworkContext` | `client/context/YellowNetworkContext.tsx` | Manages WS connection & auth state |
+| `useYellowChannel` | `client/hooks/useYellowChannel.ts` | Hook for casting gasless votes |
+| `yellowNetwork.ts` | `client/lib/yellowNetwork.ts` | Nitrolite RPC builders & EIP-712 helpers |
+| `yellowNetworkService.js` | `server/services/yellowNetworkService.js` | Server-side auth, transfers & reward dispatch |
+
+### Configuration
+
+```env
+# Client
+NEXT_PUBLIC_CLEARNODE_WS_URL=wss://clearnet-sandbox.yellow.com/ws
+NEXT_PUBLIC_YELLOW_CUSTODY=0x019B65A265EB3363822f2752141b3dF16131b262
+NEXT_PUBLIC_YELLOW_ADJUDICATOR=0x7c7ccbc98469190849BCC6c926307794fDfB11F2
+
+# Server
+YELLOW_CLEARNODE_WS_URL=wss://clearnet-sandbox.yellow.com/ws
+YELLOW_PRIVATE_KEY=<server_wallet_private_key>
+```
+
+---
+
 ## 🔗 Smart Contract
 
 ### Contract Details
@@ -456,6 +549,19 @@ Test backend:
 ```bash
 cd server && pnpm start
 ```
+
+---
+
+## 📈 TVL Potential
+
+![TVL Growth Projection](chart.jpg)
+
+- **Low vote cost = high frequency** — more votes per user means more capital locked at any time
+- **Gasless voting via Yellow Network** removes the #1 barrier to participation in prediction markets
+- **Winners reinvest rewards** — capital stays within the ecosystem, compounding TVL retention
+- **4 market cycles/day per template** — TVL compounds as template library grows
+- **Viral loops drive spikes** — trending memes attract sudden influx of voters and staked capital
+- **Memes = massive TAM** — far larger addressable audience than political or sports prediction markets
 
 ---
 
