@@ -21,7 +21,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           {/* Brand Section */}
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold text-white mb-4">ViralForge</h3>
+            <h3 className="text-2xl font-bold text-white mb-4">Laugh Odds</h3>
             <p className="text-gray-400 text-sm mb-4 max-w-md">
               The first web3 platform that brings financial value to meme creation and curation. Create, vote, and earn from the internet's favorite content.
             </p>
@@ -105,7 +105,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-gray-700/50">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-gray-400 text-sm">
-              © 2025 ViralForge. All rights reserved.
+              © 2025 Laugh Odds. All rights reserved.
             </div>
             <div className="flex space-x-6">
               {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item) => (

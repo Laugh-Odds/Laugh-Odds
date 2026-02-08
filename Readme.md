@@ -1,4 +1,4 @@
-# 🎭 ViralForge - Where Memes Meet Web3 Economics
+# 🎭 Laugh Odds - Where Memes Meet Web3 Economics
 
 [![YouTube Demo](https://img.shields.io/badge/YouTube-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/RuDiHXnxoms?feature=shared)
 
@@ -8,13 +8,13 @@
 
 ## 🌐 Live Demo
 
-**🔗 [Visit ViralForge](https://viral-forge-frontend.vercel.app/)**
+**🔗 [Visit Laugh Odds](https://viral-forge-frontend.vercel.app/)**
 
 Experience the full platform live at our deployed web application!
 
 ## 🎬 Demo Video
 
-[![ViralForge Demo](https://img.youtube.com/vi/RuDiHXnxoms/maxresdefault.jpg)](https://youtu.be/RuDiHXnxoms?feature=shared)
+[![Laugh Odds Demo](https://img.youtube.com/vi/RuDiHXnxoms/maxresdefault.jpg)](https://youtu.be/RuDiHXnxoms?feature=shared)
 
 *Click to watch the full demo on YouTube*
 

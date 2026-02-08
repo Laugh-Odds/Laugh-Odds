@@ -19,7 +19,7 @@ const MobileNav: React.FC<{
           className="text-2xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent cursor-pointer"
           onClick={() => window.location.href = '/'}
         >
-          ViralForge
+          Laugh Odds
         </h1>
       </div>
     </div>
@@ -73,7 +73,7 @@ const Header: React.FC = () => {
             className="text-2xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent cursor-pointer"
             onClick={() => window.location.href = '/'}
           >
-            ViralForge
+            Laugh Odds
           </h1>
         </div>
 
@@ -82,7 +82,7 @@ const Header: React.FC = () => {
           className="text-2xl font-bold lg:hidden bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent cursor-pointer"
           onClick={() => window.location.href = '/'}
         >
-          ViralForge
+          Laugh Odds
         </h1>
 
         {/* Wallet Controls */}

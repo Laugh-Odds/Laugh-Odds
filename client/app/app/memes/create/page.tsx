@@ -58,7 +58,7 @@ const MemeCreator: React.FC = () => {
             finalMeme={finalMeme}
             setStage={setStage}
             setFinalMeme={setFinalMeme}
-            shareText="Check out this meme I created with ViralForge! 🎨"
+            shareText="Check out this meme I created with Laugh Odds! 🎨"
           />
         );
       default:

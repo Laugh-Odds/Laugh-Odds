@@ -47,7 +47,7 @@ export function buildAuthRequest(sessionKey: string, walletAddress: string): { m
   const params: AuthParams = {
     address: walletAddress,
     session_key: sessionKey,
-    application: 'ViralForge',
+    application: 'Laugh Odds',
     allowances: [{ asset: 'ytest.usd', amount: '1000000000' }],
     expires_at: Math.floor(Date.now() / 1000) + 3600, // 1 hour in seconds (Unix timestamp)
     scope: 'test.app'
