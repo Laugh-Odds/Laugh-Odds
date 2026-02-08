@@ -1,6 +1,6 @@
 # 🎭 Laugh Odds - Where Memes Meet Web3 Economics
 
-[![YouTube Demo](https://img.shields.io/badge/YouTube-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/RuDiHXnxoms?feature=shared)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/ATl7kODXj5k)
 
 **The first web3 platform bringing financial value to meme creation and curation. Create, vote, and earn from the internet's favorite content while building a true community around humor.**
 
@@ -14,7 +14,7 @@ Experience the full platform live at our deployed web application!
 
 ## 🎬 Demo Video
 
-<!-- [![Laugh Odds Demo](https://img.youtube.com/vi/RuDiHXnxoms/maxresdefault.jpg)](https://youtu.be/RuDiHXnxoms?feature=shared) -->
+[![Laugh Odds Demo](https://img.youtube.com/vi/ATl7kODXj5k/maxresdefault.jpg)](https://youtu.be/ATl7kODXj5k)
 
 _Click to watch the full demo on YouTube_
 
@@ -83,13 +83,17 @@ _Experience the same powerful meme creation and voting platform in both formats!
 ```mermaid
 graph TB
     A[Web Frontend - Next.js] --> B[Backend API - Express.js]
+    M[Flutter Mobile App] --> B
     B --> D[MongoDB Database]
     B --> E[Smart Contract]
     E --> F[Sepolia Testnet]
     B --> G[Auto-Settlement Service]
     A --> H[IPFS Storage - Pinata]
+    M --> H
     A --> I[MetaMask Wallet]
+    M --> I
     A --> Y[Yellow Network State Channels]
+    M --> Y
     B --> Y
     L[Cron Jobs] --> G
 ```
