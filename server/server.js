@@ -10,6 +10,11 @@ const CONTRACT = require("./FunnyOrFud.json");
 const AutoSettlementService = require("./services/settlementService");
 const yellowNetworkService = require("./services/yellowNetworkService");
 
+// Prevent crashes from unhandled MongoDB timeouts
+process.on('unhandledRejection', (err) => {
+  console.log('Unhandled rejection (non-fatal):', err.message || err);
+});
+
 const app = express();
 
 // Middleware
@@ -33,6 +38,10 @@ const contractABI = CONTRACT.abi;
 const settlementService = new AutoSettlementService();
 settlementService.start();
 
+// In-memory fallback when MongoDB is down
+const memoryVotes = new Set(); // "address_marketId" keys
+const memoryFaucet = new Set(); // addresses that got faucet
+
 // Connect to Yellow Network on startup
 yellowNetworkService.connect().then(() => {
   console.log("⚡ Yellow Network connected");
@@ -54,7 +63,7 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
-// Track user votes when they vote (now with Yellow Network transfer validation)
+// Track user votes when they vote (with in-memory fallback when MongoDB is down)
 app.post("/api/user-vote", async (req, res) => {
   const { userAddress, marketId, vote, transferId, memeCid } = req.body;
 
@@ -63,34 +72,50 @@ app.post("/api/user-vote", async (req, res) => {
   }
 
   try {
-    // Validate Yellow Network transfer proof if provided
-    if (transferId) {
-      const validation = yellowNetworkService.validateIncomingVoteTransfer({ transferId });
-      if (!validation.valid) {
-        return res.status(400).json({ message: validation.error || "Invalid transfer proof" });
+    const voteKey = memeCid
+      ? `${userAddress}_${marketId}_${memeCid}`
+      : `${userAddress}_${marketId}`;
+
+    // Check duplicate (try MongoDB first, fallback to memory)
+    try {
+      const query = memeCid
+        ? { userAddress, marketId, memeCid }
+        : { userAddress, marketId };
+      const existingVote = await UserVote.findOne(query).maxTimeMS(3000);
+      if (existingVote) {
+        return res.status(400).json({ message: "User already voted on this" });
+      }
+    } catch (dbErr) {
+      // MongoDB down - use in-memory
+      if (memoryVotes.has(voteKey)) {
+        return res.status(400).json({ message: "User already voted on this" });
       }
     }
 
-    // Check if user already voted on this specific meme (or market if no meme)
-    const query = memeCid
-      ? { userAddress, marketId, memeCid }
-      : { userAddress, marketId };
-
-    const existingVote = await UserVote.findOne(query);
-    if (existingVote) {
-      return res.status(400).json({ message: "User already voted on this" });
+    // Try on-chain vote via relay (server pays gas)
+    try {
+      const contract = new Contract(contractAddress, contractABI, relayerWallet);
+      const voteYes = vote === 'funny';
+      const voteCost = await contract.voteCost();
+      const txResponse = await contract.vote(userAddress, BigInt(marketId), voteYes, {
+        value: voteCost
+      });
+      console.log("Vote tx sent:", txResponse.hash);
+    } catch (chainErr) {
+      console.log("On-chain vote failed (may already voted):", chainErr.message?.substring(0, 100));
     }
 
-    // Save user vote
+    // Save vote (try MongoDB, fallback to memory)
+    memoryVotes.add(voteKey);
     const userVote = new UserVote({
       userAddress,
       marketId,
       vote,
-      transactionHash: transferId || 'yellow_network',
+      transactionHash: transferId || 'relay',
       memeCid,
     });
+    userVote.save().catch(() => console.log("MongoDB save failed, vote in memory"));
 
-    await userVote.save();
     res.json({ message: "Vote recorded successfully" });
   } catch (error) {
     console.error("Error recording user vote:", error);
@@ -215,6 +240,76 @@ app.post("/api/memes", async (req, res) => {
   }
 });
 
+app.get("/api/markets-data", async (req, res) => {
+  try {
+    const contract = new Contract(contractAddress, contractABI, provider);
+    const count = await contract.marketCount();
+    const markets = [];
+    for (let i = 0; i < Number(count); i++) {
+      try {
+        const m = await contract.getMarket(i);
+        // getMarket returns: [creator, endTime, isActive, metadata, memes[]]
+        const memes = (m[4] || []).map(rm => ({
+          creator: rm[0],
+          cid: rm[1],
+          memeTemplate: Number(rm[2])
+        }));
+        markets.push({
+          id: i,
+          creator: m[0],
+          endTime: Number(m[1]),
+          yesVotes: 0,
+          noVotes: 0,
+          totalStaked: "0",
+          isActive: m[2],
+          metadata: m[3],
+          memes: memes
+        });
+      } catch(e) {
+        console.log("Market", i, "error:", e.message);
+      }
+    }
+    res.json(markets);
+  } catch (error) {
+    console.error("Error fetching markets:", error);
+    res.status(500).json({ message: "Failed to fetch markets", error: error.message });
+  }
+});
+
+app.post("/api/market", async (req, res) => {
+  const { cid } = req.body;
+
+  if (!cid) {
+    return res.status(400).json({ message: "Missing CID parameter" });
+  }
+
+  try {
+    const contract = new Contract(contractAddress, contractABI, relayerWallet);
+
+    const gasLimit = await contract.createMarket.estimateGas(cid);
+
+    const txResponse = await contract.createMarket(cid, {
+      gasLimit: gasLimit,
+    });
+
+    console.log("Market creation transaction sent:", txResponse.hash);
+
+    res.json({
+      success: true,
+      message: "Market created successfully",
+      transactionHash: txResponse.hash
+    });
+
+    // Wait for confirmation in background
+    txResponse.wait().then(receipt => {
+      console.log("Market creation confirmed in block:", receipt.blockNumber);
+    });
+  } catch (error) {
+    console.error("Error creating market:", error);
+    res.status(500).json({ message: "Failed to create market", error: error.message });
+  }
+});
+
 app.post("/api/meme", async (req, res) => {
   const { address, cid, templateId } = req.body;
 
@@ -272,28 +367,39 @@ app.get("/api/memes/:templateId", async (req, res) => {
 });
 
 app.get("/api/faucet/:address", async (req, res) => {
+  const addr = req.params.address;
   try {
-    const gas = await GasModel.findOne({ address: req.params.address });
-
-    if (!gas) {
-      const tx = await relayerWallet.sendTransaction({
-        to: req.params.address,
-        value: parseEther("0.01"), // Smaller amount for Sepolia
-      });
-
-      await tx.wait();
-
-      const sentGas = new GasModel({
-        address: req.params.address,
-      });
-
-      await sentGas.save();
-      return res.status(200).json({ message: "Sent tokens" });
+    // Check duplicate (try MongoDB first, fallback to memory)
+    let alreadySent = false;
+    try {
+      const gas = await GasModel.findOne({ address: addr }).maxTimeMS(3000);
+      if (gas) alreadySent = true;
+    } catch (dbErr) {
+      if (memoryFaucet.has(addr)) alreadySent = true;
     }
 
-    res.status(200).json({ message: "Already given some testnet tokens" });
+    if (alreadySent) {
+      return res.status(200).json({ success: true, message: "Already given testnet tokens" });
+    }
+
+    const tx = await relayerWallet.sendTransaction({
+      to: addr,
+      value: parseEther("0.01"),
+    });
+
+    console.log("Faucet tx sent:", tx.hash);
+    memoryFaucet.add(addr);
+
+    // Save to MongoDB in background (don't block response)
+    new GasModel({ address: addr }).save().catch(() => {})
+
+    // Don't wait for confirmation - return immediately
+    res.status(200).json({ success: true, message: "Sent 0.01 ETH! Tx: " + tx.hash });
+
+    // Wait in background
+    tx.wait().then(() => console.log("Faucet confirmed for", addr));
   } catch (error) {
-    console.log(error);
+    console.log("Faucet error:", error.message);
     res.status(500).json({ message: error.message });
   }
 });
