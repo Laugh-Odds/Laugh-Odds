@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    /* Base colors */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* UI elements */
+    --primary: 220 14% 96%;
+    --primary-foreground: 220 10% 3.9%;
+    --secondary: 220 14% 90%;
+    --secondary-foreground: 220 10% 3.9%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 46.1%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 10% 3.9%;
+
+    /* States */
+    --destructive: 0 0% 20%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: 220 14% 85%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark theme - Focusing on blacks, whites, and subtle blue */
+    --background: 220 10% 8%;           /* Very dark blue-black */
+    --foreground: 0 0% 98%;             /* Off-white */
+
+    /* Base colors */
+    --card: 220 10% 10%;                /* Slightly lighter than background */
+    --card-foreground: 0 0% 98%;
+    --popover: 220 10% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    /* UI elements - Subtle and sophisticated */
+    --primary: 220 10% 95%;             /* Almost white */
+    --primary-foreground: 220 10% 8%;
+    --secondary: 220 10% 15%;           /* Subtle dark blue */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 220 10% 12%;              /* Slightly muted dark */
+    --muted-foreground: 220 10% 70%;
+    --accent: 220 10% 20%;             /* Subtle accent */
+    --accent-foreground: 0 0% 98%;
+
+    /* States and interactions */
+    --destructive: 0 0% 20%;           /* Dark gray for destructive */
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 15%;            /* Subtle borders */
+    --input: 220 10% 15%;
+    --ring: 220 10% 25%;
+
+    /* Chart colors - Monochromatic with subtle blue tints */
+    --chart-1: 220 10% 90%;          /* Light */
+    --chart-2: 220 10% 70%;          /* Medium light */
+    --chart-3: 220 10% 50%;          /* Medium */
+    --chart-4: 220 10% 30%;          /* Medium dark */
+    --chart-5: 220 10% 15%;          /* Dark */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background: linear-gradient(135deg, #0a0a0f 0%, #0d0d1a 50%, #0a0f1a 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .glow-yellow {
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.3), 0 0 40px rgba(234, 179, 8, 0.1);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+  }
+}
+
+/* Custom scrollbar styles for meme creator */
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #1f2937;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+}
