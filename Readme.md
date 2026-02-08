@@ -8,25 +8,27 @@
 
 ## 🌐 Live Demo
 
-**🔗 [Visit Laugh Odds](https://viral-forge-frontend.vercel.app/)**
+<!-- **🔗 [Visit Laugh Odds]()** -->
 
 Experience the full platform live at our deployed web application!
 
 ## 🎬 Demo Video
 
-[![Laugh Odds Demo](https://img.youtube.com/vi/RuDiHXnxoms/maxresdefault.jpg)](https://youtu.be/RuDiHXnxoms?feature=shared)
+<!-- [![Laugh Odds Demo](https://img.youtube.com/vi/RuDiHXnxoms/maxresdefault.jpg)](https://youtu.be/RuDiHXnxoms?feature=shared) -->
 
-*Click to watch the full demo on YouTube*
+_Click to watch the full demo on YouTube_
 
 ## 📱 Platform Availability
 
 ### 🌐 Web Application
-- **URL**: [https://viral-forge-frontend.vercel.app/](https://viral-forge-frontend.vercel.app/)
+
+<!-- - **URL**: [https://viral-forge-frontend.vercel.app/](https://viral-forge-frontend.vercel.app/) -->
+
 - **Features**: Full desktop and mobile web experience
 - **Wallet**: MetaMask integration
 - **Responsive**: Works on all screen sizes
 
-*Experience the same powerful meme creation and voting platform in both formats!*
+_Experience the same powerful meme creation and voting platform in both formats!_
 
 ## 📋 Table of Contents
 
@@ -45,28 +47,33 @@ Experience the full platform live at our deployed web application!
 ## 🌟 Features
 
 ### 🎨 Template Creation Studio
+
 - Upload and create original meme templates
 - Advanced meme editor with draggable text
 - Earn royalties from template usage
 
 ### 🗳️ Humor Prediction Markets
+
 - Simple swipe interface (Right = Funny, Left = Lame)
 - Stake 0.0001 ytest.usd per vote via Yellow Network state channels
 - Democratic humor validation
 - 6-hour settlement period
 
 ### 💰 Decentralized Rewards
+
 - 95% to winning voters, 5% to creators
 - Automatic settlement after 6 hours
 - Fair reward distribution based on contribution
 - Real-time earnings tracking
 
 ### 👥 Three-Pillar Ecosystem
+
 - **Template Creators**: The visionaries who spot emerging meme potential
 - **Meme Creators**: The storytellers who transform templates into hilarious content
 - **Meme Consumers**: The validators who discover, curate, and earn for accurate taste predictions
 
 ### ⚡ Gasless Voting via Yellow Network
+
 - Votes are off-chain state channel transfers — no gas fees
 - Instant finality via Yellow Network's Clearnode
 - Automatic faucet top-up for new users
@@ -90,6 +97,7 @@ graph TB
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 16+
 - pnpm (recommended) or npm
 - MetaMask wallet
@@ -98,18 +106,21 @@ graph TB
 ### 1-Minute Setup
 
 Clone the repository:
+
 ```bash
-git clone https://github.com/your-username/viralforge.git
-cd viralforge
+git clone https://github.com/Laugh-Odds/Laugh-Odds
+cd Laugh-Odds
 ```
 
 Install dependencies for both client and server:
+
 ```bash
 cd client && pnpm install
 cd ../server && pnpm install
 ```
 
 Set up environment variables (see Configuration section):
+
 ```bash
 cp .env.example .env
 ```
@@ -117,11 +128,13 @@ cp .env.example .env
 Start development servers in two terminals:
 
 Terminal 1 - Server:
+
 ```bash
 cd server && pnpm dev
 ```
 
 Terminal 2 - Client:
+
 ```bash
 cd client && pnpm dev
 ```
@@ -133,21 +146,25 @@ Visit `http://localhost:3000` to start creating memes! 🎉
 ### Client Setup
 
 Navigate to client directory:
+
 ```bash
 cd client
 ```
 
 Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 Create environment file:
+
 ```bash
 cp .env.example .env
 ```
 
 Start development server:
+
 ```bash
 pnpm dev
 ```
@@ -157,21 +174,25 @@ The client will be available at `http://localhost:3000`
 ### Server Setup
 
 Navigate to server directory:
+
 ```bash
 cd server
 ```
 
 Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 Create environment file:
+
 ```bash
 cp .env.example .env
 ```
 
 Start development server:
+
 ```bash
 pnpm dev
 ```
@@ -223,12 +244,14 @@ NEXT_PUBLIC_PROD=False
 If you deploy a new smart contract, update the contract address in these files:
 
 Client Configuration:
+
 ```javascript
 // client/lib/ethers.ts
-export const DEPLOYED_CONTRACT = 'YOUR_NEW_CONTRACT_ADDRESS';
+export const DEPLOYED_CONTRACT = "YOUR_NEW_CONTRACT_ADDRESS";
 ```
 
 Server Configuration:
+
 ```javascript
 // server/services/settlementService.js (line 12)
 this.contractAddress = "YOUR_NEW_CONTRACT_ADDRESS";
@@ -239,7 +262,7 @@ this.contractAddress = "YOUR_NEW_CONTRACT_ADDRESS";
 ## 📁 Project Structure
 
 ```
-viralforge/
+Laugh-Odds/
 ├── client/                     # Frontend Next.js application
 │   ├── app/                   # App router pages
 │   │   ├── app/              # Main application pages
@@ -275,26 +298,31 @@ viralforge/
 ## 🎯 How It Works
 
 ### 1. Template Creation 🎨
+
 - Users upload images or photos to create meme templates
 - Templates are stored on IPFS for decentralized access
 - Smart contract creates a prediction market for each template
 
 ### 2. Meme Creation ✍️
+
 - Users select templates and add custom text
 - Advanced editor with draggable, resizable text boxes
 - Final memes are stored on IPFS and linked to templates
 
 ### 3. Voting & Prediction 🗳️
+
 - Simple swipe interface: Right = Funny, Left = Lame
 - Each vote costs 0.0001 ytest.usd via Yellow Network (gasless)
 - 6-hour voting period for fair settlement
 
 ### 4. Automatic Settlement ⚡
+
 - Cron job checks for expired markets every 5 minutes
 - Rewards distributed via Yellow Network state channel transfers
 - 95% to winning voters, 5% to template creators
 
 ### 5. Settlement Tracking 📊
+
 - Database tracks all user votes and settlements
 - Users can view their betting history and earnings
 - Real-time settlement status updates
@@ -302,11 +330,13 @@ viralforge/
 ## 🔗 Smart Contract
 
 ### Contract Details
+
 - **Network**: Sepolia Testnet
 - **Address**: `0x4c7Bad39Fc980701043a3b03051Cd64835d5e2aA`
 - **Explorer**: [View on Sepolia Etherscan](https://sepolia.etherscan.io/address/0x4c7Bad39Fc980701043a3b03051Cd64835d5e2aA)
 
 ### Key Functions
+
 ```solidity
 // Create a new meme template market
 function createMarket(string memory metadata) external
@@ -316,6 +346,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 ```
 
 ### Contract Features
+
 - **Market Duration**: 6 hours
 - **Creator Reward**: 5% of total pool
 - **Voter Rewards**: 95% distributed among winners
@@ -324,6 +355,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 14 (App Router)
 - **Styling**: Tailwind CSS
 - **UI Components**: Custom components with Framer Motion
@@ -333,6 +365,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 - **State Management**: React hooks
 
 ### Backend
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
 - **Database**: MongoDB with Mongoose
@@ -340,6 +373,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 - **Job Scheduling**: node-cron
 
 ### Blockchain & Payments
+
 - **Smart Contract Network**: Sepolia Testnet
 - **Smart Contract**: Solidity
 - **Wallet Integration**: MetaMask
@@ -349,6 +383,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 ## 🎮 Usage Guide
 
 ### For Template Creators
+
 1. Connect your MetaMask wallet
 2. Navigate to "Create" section
 3. Upload an image or take a photo
@@ -356,6 +391,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 5. Earn 5% from every vote on your template!
 
 ### For Meme Creators
+
 1. Browse existing templates
 2. Select a template you like
 3. Add custom text with the drag-and-drop editor
@@ -363,6 +399,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 5. Share your creation on social media
 
 ### For Voters/Curators
+
 1. Browse meme templates and their content
 2. Swipe right (👍) for funny memes
 3. Swipe left (👎) for lame memes
@@ -370,6 +407,7 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 5. Win rewards if you're in the majority after 6 hours!
 
 ### Settlement Tracking
+
 1. Visit the "Settlements" page
 2. View your voting history
 3. See win/loss status for each bet
@@ -381,18 +419,21 @@ function createMeme(address creator, string memory cid, uint256 templateId) exte
 ### Adding New Features
 
 Frontend Components:
+
 ```bash
 cd client/components
 # Add your new component
 ```
 
 Backend Routes:
+
 ```bash
 cd server
 # Add routes to server.js
 ```
 
 Database Models:
+
 ```bash
 cd server/models
 # Add new Mongoose models
@@ -401,11 +442,13 @@ cd server/models
 ### Testing
 
 Test frontend:
+
 ```bash
 cd client && pnpm build
 ```
 
 Test backend:
+
 ```bash
 cd server && pnpm start
 ```
@@ -426,4 +469,4 @@ For support, please open an issue on GitHub or contact us through our social cha
 
 ---
 
-*Built with ❤️ for the meme community*
+_Built with ❤️ for the meme community_
