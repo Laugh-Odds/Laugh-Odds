@@ -4,7 +4,7 @@
 
 **The first web3 platform bringing financial value to meme creation and curation. Create, vote, and earn from the internet's favorite content while building a true community around humor.**
 
-> **🚀 Available as both Web App and Telegram Mini App!**
+> **🚀 Available as both Web App and Android App!**
 
 ## 🌐 Live Demo
 
@@ -227,7 +227,7 @@ Create `client/.env` with the following variables:
 
 ```env
 # IPFS Storage
-NEXT_PUBLIC_LIGHTHOPSE_GATEWAY="your_lighthouse_api_key"
+NEXT_PUBLIC_PINATA_GATEWAY="your_pinata_jwt_token"
 
 # Yellow Network
 NEXT_PUBLIC_CLEARNODE_WS_URL="wss://clearnet-sandbox.yellow.com/ws"
